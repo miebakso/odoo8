@@ -26,5 +26,6 @@ class franchisee(osv.osv):
 	_inherit = 'res.partner'
 
 	_columns = {
+		'check': fields.boolean('Franchisee'),
 		'tier_id': fields.many2one('franchisee.tier','Tier', ondelete='restrict'),
 	}

@@ -6,7 +6,7 @@
 
 
 
-<!-- Tier ================================================================================================================ -->
+<!-- Tier =================================================================================================================== -->
 
 		<record id="franchisee_tier_form" model="ir.ui.view">
 			<field name="name">franchisee.tier.form</field>
@@ -14,7 +14,7 @@
 			<field name="arch" type="xml">
 				<form>
 					<group>
-						<field name="name" />
+						<field name="name" colspan="4" />
 						<field name="percentage" />
 					</group>
 				</form>
@@ -41,6 +41,40 @@
 
 		<menuitem id="franchisee_menu_tier" sequence="1" parent="franchisee_menu_config" action="franchisee_action_tier" />
 
+<!-- Franchisee ============================================================================================================= -->
+	
+		<record id="franchisee_franchisee_form" model="ir.ui.view">
+			<field name="name">franchisee.franchisee.form.inherit</field>
+			<field name="model">franchisee.franchisee</field>
+			<field name="inherit_id" ref="base.view_partner_form"/>
+			<field name="arch" type="xml">
+				<notebook>
+					<page string="Tier">
+						<field name="check" />
+						<field name="tier_id" attrs="{'invisible':[('check','!=',True)]}" />
+					</page>
+				</notebook>
+			</field>
+		</record>
 
+		<record id="franchisee_franchisee_tree" model="ir.ui.view">
+			<field name="name">franchisee.franchisee.tree</field>
+			<field name="model">franchisee.franchisee</field>
+			<field name="view_id" ref="franchisee_franchisee_form"/>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="tier_id" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="franchisee_action_franchisee" model="ir.actions.act_window">
+			<field name="name">Franchisee</field>
+			<field name="res_model">franchisee.franchisee</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="franchisee_menu_franchisee" sequence="2" parent="franchisee_menu_config" action="franchisee_action_franchisee" />
 	</data>
 </openerp>
