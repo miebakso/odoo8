@@ -4,7 +4,7 @@
 	'category': 'Development',
 	'version': '1.0.0',
 	'author': 'Test',
-	'maintainer': 'Matthew Ariel',
+	'maintainer': 'Matthew Ariel, Edrick Ezra, Stephen Senjaya, Jonathan Alva',
 	'website': 'https://iaaaa.asd',
 	'sequence': 150,
 	'depends': [
