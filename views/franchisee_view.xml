@@ -14,7 +14,7 @@
 			<field name="arch" type="xml">
 				<form>
 					<group>
-						<field name="name" colspan="4" />
+						<field name="name" />
 						<field name="percentage" />
 					</group>
 				</form>
@@ -43,24 +43,24 @@
 
 <!-- Franchisee ============================================================================================================= -->
 	
-		<record id="franchisee_franchisee_form" model="ir.ui.view">
-			<field name="name">franchisee.franchisee.form.inherit</field>
-			<field name="model">franchisee.franchisee</field>
+		<record id="franchisee_res_partner_form" model="ir.ui.view">
+			<field name="name">franchisee.res.partner.form.inherit</field>
+			<field name="model">res.partner</field>
 			<field name="inherit_id" ref="base.view_partner_form"/>
 			<field name="arch" type="xml">
-				<notebook>
-					<page string="Tier">
-						<field name="check" />
-						<field name="tier_id" attrs="{'invisible':[('check','!=',True)]}" />
+				<xpath expr="//notebook" position="inside">
+					<page string="Franchisee">
+						<field name="state" />
+						<field name="tier_id" attrs="{'invisible':[('state','!=',True)]}" />
 					</page>
-				</notebook>
+				</xpath>
 			</field>
 		</record>
 
-		<record id="franchisee_franchisee_tree" model="ir.ui.view">
-			<field name="name">franchisee.franchisee.tree</field>
-			<field name="model">franchisee.franchisee</field>
-			<field name="view_id" ref="franchisee_franchisee_form"/>
+		<record id="franchisee_res_partner_tree" model="ir.ui.view">
+			<field name="name">franchisee.res.partner.tree</field>
+			<field name="model">res.partner</field>
+			<field name="view_id" ref="franchisee_res_partner_form"/>
 			<field name="arch" type="xml">
 				<tree>
 					<field name="tier_id" />
@@ -68,13 +68,13 @@
 			</field>
 		</record>
 
-		<record id="franchisee_action_franchisee" model="ir.actions.act_window">
+		<record id="franchisee_action_res_partner" model="ir.actions.act_window">
 			<field name="name">Franchisee</field>
-			<field name="res_model">franchisee.franchisee</field>
+			<field name="res_model">res.partner</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 		</record>
 
-		<menuitem id="franchisee_menu_franchisee" sequence="2" parent="franchisee_menu_config" action="franchisee_action_franchisee" />
+		<menuitem id="franchisee_menu_franchisee" sequence="2" parent="franchisee_menu_config" action="franchisee_action_res_partner" />
 	</data>
 </openerp>

@@ -9,7 +9,7 @@ class tier(osv.osv):
 	_columns = {
 		'name': fields.char('Tier Name', size=40, required=True),
 		'percentage': fields.float('Percentage', required=True),
-		'franchisee_ids': fields.one2many('franchisee.franchisee','tier_id','Franchisee'),
+		'franchisee_ids': fields.one2many('res.partner','tier_id','Franchisee'),
 	}
 
 	_sql_constraints = [
@@ -19,13 +19,10 @@ class tier(osv.osv):
 
 # ==========================================================================================================================
 
-class franchisee(osv.osv):
-	_name = 'franchisee.franchisee'
-	_description = 'Franchisee User'
-
+class res_partner(osv.osv):
 	_inherit = 'res.partner'
 
 	_columns = {
-		'check': fields.boolean('Franchisee'),
+		'state': fields.boolean('Franchisee', default=False),
 		'tier_id': fields.many2one('franchisee.tier','Tier', ondelete='restrict'),
 	}
