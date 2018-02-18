@@ -1,16 +1,16 @@
-from openerp.osv import osv, fields
+from openerp import models, fields, api
 
 
 # ==========================================================================================================================
 
-class tier(osv.osv):
+class tier(models.Model):
 	_name = 'franchisee.tier'
 	_description = 'Franchisee tier'
-	_columns = {
-		'name': fields.char('Tier Name', size=40, required=True),
-		'percentage': fields.float('Percentage', required=True),
-		'franchisee_ids': fields.one2many('res.partner','tier_id','Franchisee'),
-	}
+	
+	name = fields.Char('Tier Name', size=40, required=True)
+	percentage = fields.Float('Percentage', required=True)
+	franchisee_ids = fields.One2many('res.partner','tier_id','Franchisee')
+	
 
 	_sql_constraints = [
 		('percentage_check','check(percentage>0 and percentage < 100)','Percentage must be more than 0 and less than 100')
@@ -19,10 +19,13 @@ class tier(osv.osv):
 
 # ==========================================================================================================================
 
-class res_partner(osv.osv):
+class res_partner(models.Model):
 	_inherit = 'res.partner'
 
-	_columns = {
-		'state': fields.boolean('Franchisee', default=False),
-		'tier_id': fields.many2one('franchisee.tier','Tier', ondelete='restrict'),
-	}
+	is_franchisee = fields.Boolean('Is Franchisee')
+	tier_id = fields.Many2one('franchisee.tier','Tier', ondelete='restrict')
+
+	@api.onchange('is_franchisee')
+	def onchange_is_franchisee(self):
+		if self.is_franchisee == False:
+			self.tier_id = False

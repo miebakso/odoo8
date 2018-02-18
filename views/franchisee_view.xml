@@ -50,8 +50,10 @@
 			<field name="arch" type="xml">
 				<xpath expr="//notebook" position="inside">
 					<page string="Franchisee">
-						<field name="state" />
-						<field name="tier_id" attrs="{'invisible':[('state','!=',True)]}" />
+						<group>
+							<field name="is_franchisee" oc_change="onchange_is_franchisee()" />
+							<field name="tier_id" attrs="{'invisible':[('is_franchisee','!=',True)]}" />
+						</group>
 					</page>
 				</xpath>
 			</field>
