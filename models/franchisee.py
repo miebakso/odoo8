@@ -26,6 +26,6 @@ class res_partner(models.Model):
 	tier_id = fields.Many2one('franchisee.tier','Tier', ondelete='restrict')
 
 	@api.onchange('is_franchisee')
-	def onchange_is_franchisee(self):
+	def _check_is_franchisee(self):
 		if self.is_franchisee == False:
 			self.tier_id = False

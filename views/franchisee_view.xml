@@ -51,8 +51,8 @@
 				<xpath expr="//notebook" position="inside">
 					<page string="Franchisee">
 						<group>
-							<field name="is_franchisee" oc_change="onchange_is_franchisee()" />
-							<field name="tier_id" attrs="{'required':[('is_franchisee','!=','False')],'invisible':[('is_franchisee','!=',True)]}" />
+							<field name="is_franchisee" />
+							<field name="tier_id" attrs="{'required':[('is_franchisee','=',True)],'invisible':[('is_franchisee','=',False)]}" />
 						</group>
 					</page>
 				</xpath>
