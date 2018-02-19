@@ -2,7 +2,7 @@
 	<data>
 
 	<menuitem id="franchisee_menu_root" name="Franchisee" sequence="20" />
-	<menuitem id="franchisee_menu_config" name="Franchisee Configuration" sequence="1" parent="franchisee_menu_root" />
+	<menuitem id="franchisee_menu_config" name="Configuration" sequence="1" parent="franchisee_menu_root" />
 
 
 
@@ -16,6 +16,9 @@
 					<group>
 						<field name="name" />
 						<field name="percentage" />
+					</group>
+					<group>
+						<field name="franchisee_ids" readonly="1" />
 					</group>
 				</form>
 			</field>
@@ -33,7 +36,7 @@
 		</record>
 
 		<record id="franchisee_action_tier" model="ir.actions.act_window">
-			<field name="name">Tier</field>
+			<field name="name">Tiers</field>
 			<field name="res_model">franchisee.tier</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -70,7 +73,7 @@
 		</record>
 
 		<record id="franchisee_action_res_partner" model="ir.actions.act_window">
-			<field name="name">Franchisee</field>
+			<field name="name">Franchisees</field>
 			<field name="res_model">res.partner</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
