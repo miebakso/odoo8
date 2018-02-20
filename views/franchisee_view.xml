@@ -1,12 +1,12 @@
 <openerp>
 	<data>
 
-	<menuitem id="franchisee_menu_root" name="Franchisee" sequence="20" />
-	<menuitem id="franchisee_menu_config" name="Configuration" sequence="1" parent="franchisee_menu_root" />
+		<menuitem id="franchisee_menu_root" name="Franchisee" sequence="20" />
+		<menuitem id="franchisee_menu_config" name="Configuration" sequence="1" parent="franchisee_menu_root" />
 
 
 
-<!-- Tier =================================================================================================================== -->
+		<!-- Tier =================================================================================================================== -->
 
 		<record id="franchisee_tier_form" model="ir.ui.view">
 			<field name="name">franchisee.tier.form</field>
@@ -41,8 +41,8 @@
 
 		<menuitem id="franchisee_menu_tier" sequence="1" parent="franchisee_menu_config" action="franchisee_action_tier" />
 
-<!-- Franchisee ============================================================================================================= -->
-	
+		<!-- Franchisee ============================================================================================================= -->
+
 		<record id="franchisee_res_partner_form" model="ir.ui.view">
 			<field name="name">franchisee.res.partner.form.inherit</field>
 			<field name="model">res.partner</field>
@@ -77,16 +77,16 @@
 		</record>
 
 		<menuitem id="franchisee_menu_franchisee" sequence="2" parent="franchisee_menu_config" action="franchisee_action_res_partner" />
-	
-<!-- Invoice ============================================================================================================= -->
-	
+
+		<!-- Invoice ============================================================================================================= -->
+
 		<record id="franchisee_account_invoice_form" model="ir.ui.view">
 			<field name="name">franchisee.account.invoice.form.inherit</field>
 			<field name="model">account.invoice</field>
 			<field name="inherit_id" ref="account.invoice_form"/>
 			<field name="arch" type="xml">
 				<field position="after" name="partner_id">
-					<field name="franchisee_id"  />
+					<field name="franchisee_id" />
 				</field>
 			</field>
 		</record>
@@ -110,17 +110,19 @@
 		</record>
 		<menuitem id="franchisee_menu_invoice" sequence="2" parent="franchisee_menu_config" action="franchisee_action_invoice" />
 
-<!-- Login ============================================================================================================= -->
+		<!-- Login ============================================================================================================= -->
 
 		<record id="franchisee_res_users_form" model="ir.ui.view">
 			<field name="name">franchisee.res.users.form.inherit</field>
 			<field name="model">res.users</field>
 			<field name="inherit_id" ref="base.view_users_form"/>
 			<field name="arch" type="xml">
-				<field position="after" name="login">
-					<label for="franchisee_id" class="oe_edit_only" string="Franchisee"/>
-					<field name="franchisee_id" />
-				</field>
+				<!-- <form create="false"> -->
+					<field position="after" name="login">
+						<label for="franchisee_id" class="oe_edit_only" string="Franchisee"/>
+						<field name="franchisee_id" />
+					</field>
+				<!-- </form> -->
 			</field>
 		</record>
 
@@ -129,7 +131,7 @@
 			<field name="model">res.users</field>
 			<field name="view_id" ref="base.view_users_tree"/>
 			<field name="arch" type="xml">
-				<tree>
+				<tree create="false">
 					<field name="franchisee_id" />
 				</tree>
 			</field>
@@ -143,14 +145,14 @@
 		</record>
 		<menuitem id="franchisee_menu_users" sequence="2" parent="franchisee_menu_config" action="franchisee_action_users" />
 
-<!-- Bill ============================================================================================================= -->
+		<!-- Bill ============================================================================================================= -->
 		<record id="franchisee_bill_form" model="ir.ui.view">
 			<field name="name">franchisee.bill.form</field>
 			<field name="model">franchisee.bill</field>
 			<field name="arch" type="xml">
-				<form create="false">			
+				<form create="false">
 					<header>
-						<field name="state" readonly="1" widget="statusbar"></field>
+						<field name="state" readonly="1" widget="statusbar"/>
 					</header>
 					<group>
 						<field name="invoice_id" />
@@ -159,7 +161,7 @@
 						<field name="date" />
 						<field name="total_bill" />
 						<field name="nilai_komisi" />
-					</group>	
+					</group>
 				</form>
 			</field>
 		</record>

@@ -36,7 +36,7 @@ class res_partner(models.Model):
 class account_invoice(models.Model):
 	_inherit = 'account.invoice'
 
-	franchisee_id = fields.Many2one('res.partner','Franchisee ID' ,domain="[('is_franchisee','=','True')]" ,ondelete='cascade')
+	franchisee_id = fields.Many2one('res.partner','Franchisee' ,domain="[('is_franchisee','=','True')]" ,ondelete='cascade')
 
 	@api.multi
 	def invoice_validate(self):
