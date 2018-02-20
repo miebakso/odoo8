@@ -83,5 +83,5 @@ class franchisee_bill(models.Model):
 class res_users(models.Model):
 	_inherit = 'res.users'
 
-	franchisee_id = fields.Many2one('res.partner','Franchisee ID' ,domain="[('is_franchisee','=','True')]" ,ondelete='cascade')
+	franchisee_id = fields.Many2one('res.partner','Franchisee' ,domain="[('is_franchisee','=','True')]" ,ondelete='cascade')
 
