@@ -17,9 +17,6 @@
 						<field name="name" />
 						<field name="percentage" />
 					</group>
-					<group>
-						<field name="franchisee_ids" readonly="1" />
-					</group>
 				</form>
 			</field>
 		</record>
@@ -80,5 +77,116 @@
 		</record>
 
 		<menuitem id="franchisee_menu_franchisee" sequence="2" parent="franchisee_menu_config" action="franchisee_action_res_partner" />
+	
+<!-- Invoice ============================================================================================================= -->
+	
+		<record id="franchisee_account_invoice_form" model="ir.ui.view">
+			<field name="name">franchisee.account.invoice.form.inherit</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_form"/>
+			<field name="arch" type="xml">
+				<field position="after" name="partner_id">
+					<field name="franchisee_id"  />
+				</field>
+			</field>
+		</record>
+
+		<record id="franchisee_account_invoice_tree" model="ir.ui.view">
+			<field name="name">franchisee.account.invoice.tree</field>
+			<field name="model">account.invoice</field>
+			<field name="view_id" ref="franchisee_account_invoice_form"/>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="franchisee_id" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="franchisee_action_invoice" model="ir.actions.act_window">
+			<field name="name">Invoice</field>
+			<field name="res_model">account.invoice</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem id="franchisee_menu_invoice" sequence="2" parent="franchisee_menu_config" action="franchisee_action_invoice" />
+
+<!-- Login ============================================================================================================= -->
+
+		<record id="franchisee_res_users_form" model="ir.ui.view">
+			<field name="name">franchisee.res.users.form.inherit</field>
+			<field name="model">res.users</field>
+			<field name="inherit_id" ref="base.view_users_form"/>
+			<field name="arch" type="xml">
+				<field position="after" name="login">
+					<label for="franchisee_id" class="oe_edit_only" string="Franchisee"/>
+					<field name="franchisee_id" />
+				</field>
+			</field>
+		</record>
+
+		<record id="franchisee_res_users_tree" model="ir.ui.view">
+			<field name="name">franchisee.res.users.tree</field>
+			<field name="model">res.users</field>
+			<field name="view_id" ref="base.view_users_tree"/>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="franchisee_id" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="franchisee_action_users" model="ir.actions.act_window">
+			<field name="name">Users</field>
+			<field name="res_model">res.users</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem id="franchisee_menu_users" sequence="2" parent="franchisee_menu_config" action="franchisee_action_users" />
+
+<!-- Bill ============================================================================================================= -->
+		<record id="franchisee_bill_form" model="ir.ui.view">
+			<field name="name">franchisee.bill.form</field>
+			<field name="model">franchisee.bill</field>
+			<field name="arch" type="xml">
+				<form create="false">			
+					<header>
+						<field name="state" readonly="1" widget="statusbar"></field>
+					</header>
+					<group>
+						<field name="invoice_id" />
+						<field name="customer" />
+						<field name="franchisee" />
+						<field name="date" />
+						<field name="total_bill" />
+						<field name="nilai_komisi" />
+					</group>	
+				</form>
+			</field>
+		</record>
+
+		<record id="franchisee_bill_tree" model="ir.ui.view">
+			<field name="name">franchisee.bill.tree</field>
+			<field name="model">franchisee.bill</field>
+			<field name="arch" type="xml">
+				<tree create="false">
+					<field name="invoice_id" />
+					<field name="customer" />
+					<field name="franchisee" />
+					<field name="date" />
+					<field name="total_bill" />
+					<field name="nilai_komisi" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="franchisee_action_bill" model="ir.actions.act_window">
+			<field name="name">Bill</field>
+			<field name="res_model">franchisee.bill</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem id="franchisee_menu_bill" sequence="2" parent="franchisee_menu_config" action="franchisee_action_bill" />
+
 	</data>
 </openerp>
