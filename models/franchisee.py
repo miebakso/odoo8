@@ -1,4 +1,5 @@
 from openerp import models, fields, api
+from openerp.exceptions import ValidationError
 
 
 # ==========================================================================================================================
@@ -37,6 +38,12 @@ class account_invoice(models.Model):
 	_inherit = 'account.invoice'
 
 	franchisee_id = fields.Many2one('res.partner','Franchisee' ,domain="[('is_franchisee','=','True')]" ,ondelete='cascade')
+
+	@api.constrains('partner_id')
+	def _check_partner_id(self):
+		for record in self:
+			if record.partner_id.is_franchisee == True:
+				raise ValidationError('This customer is franchisee')
 
 	@api.multi
 	def invoice_validate(self):
