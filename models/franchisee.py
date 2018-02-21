@@ -65,11 +65,12 @@ class account_invoice(models.Model):
 
 	@api.multi
 	def confirm_paid(self):
-		data = self.env['franchisee.bill'].search([('invoice_id', '=', self.number)])
-		# data = self.env['franchisee.bill'].browse(vals.get('invoice_id', None))
-		data.write({'state': 'paid'})
-		self.write({'state': 'paid'})
-		return data
+		for record in self:
+			data = record.env['franchisee.bill'].search([('invoice_id', '=', record.number)])
+			# data = self.env['franchisee.bill'].browse(vals.get('invoice_id', None))
+			data.write({'state': 'paid'})
+			record.write({'state': 'paid'})
+			return data
 
 		
 	# @api.multi
