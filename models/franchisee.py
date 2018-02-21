@@ -40,7 +40,7 @@ class account_invoice(models.Model):
 	_inherit = 'account.invoice'
 
 	franchisee_id = fields.Many2one('res.partner','Franchisee' ,domain="[('is_franchisee','=','True')]" ,ondelete='cascade')
-	invoice_ids = fields.One2many('franchisee.bill', 'invoice_id', 'Franchisee Bill')
+	invoice_ids = fields.One2many('franchisee.bill', 'invoice_id', 'Invoice ID')
 
 	@api.constrains('partner_id')
 	def _check_partner_id(self):
@@ -57,27 +57,18 @@ class account_invoice(models.Model):
 				'invoice_id': record.id,
 				'customer': record.partner_id.id,
 				'franchisee': record.franchisee_id.id,
+				'total_bill_line': record.invoice_line,
 				'date': record.date_invoice,
 				'total_bill': record.amount_total,
 				'total_discount': record.amount_total * record.franchisee_id.tier_id.percentage/100
 				})
-			return bill
 
 	@api.multi
 	def confirm_paid(self):
 		for record in self:
 			data = record.env['franchisee.bill'].search([('invoice_id', '=', record.number)])
-			# data = self.env['franchisee.bill'].browse(vals.get('invoice_id', None))
 			data.write({'state': 'paid'})
 			record.write({'state': 'paid'})
-			return data
-
-		
-	# @api.multi
-	# def _compute_discount(self):
-	# 	for record in self:
-	# 		record.total_bill = record.amount_total * record.franchisee_id.tier_id.percentage/100
-
 
 # ==========================================================================================================================
 
@@ -85,20 +76,27 @@ class franchisee_bill(models.Model):
 	_name = 'franchisee.bill'
 	_description = 'Franchisee Bill'
 
-	# invoice_id = fields.Char('Invoice ID', required=True)
 	invoice_id = fields.Many2one('account.invoice', 'Invoice ID', ondelete='cascade')
-	# customer = fields.Char('Customer', required=True)
 	customer = fields.Many2one('res.partner', 'Customer', ondelete='cascade')
-	# franchisee = fields.Char('Franchisee', required=True)
 	franchisee = fields.Many2one('res.partner', 'Franchisee', domain="[('is_franchisee','=','True')]", ondelete='cascade')
 	date = fields.Date('Invoice Date')
 	total_bill = fields.Float('Total Price')
 	total_discount = fields.Float('Total Discount')
+	total_bill_line = fields.One2many('account.invoice.line', 'invoice_id', 'Bill line')
+	amount_total = fields.Float('Amount total')
+	discount_amount = fields.Float('Total discount', compute='_compute_total')
+	subtotal = fields.Float('Subtotal', compute='_compute_total')
 	state = fields.Selection([
 		('draft','Draft'),
 		('paid','Paid')],'State',default='draft')
 	
-	_rec_name = 'customer'
+	
+	@api.multi
+	def _compute_total(self):
+		for record in self:
+			record.discount_amount = record.total_bill * record.franchisee.tier_id.percentage/100
+			record.subtotal = record.total_bill-record.discount_amount
+	
 
 # ==========================================================================================================================
 	
@@ -106,4 +104,16 @@ class res_users(models.Model):
 	_inherit = 'res.users'
 
 	franchisee_id = fields.Many2one('res.partner','Franchisee' ,domain="[('is_franchisee','=','True')]" ,ondelete='cascade')
+# ==========================================================================================================================
 
+class account_invoice_line(models.Model):
+	_inherit = "account.invoice.line"
+		# total_bill_lines = fields.One2many('franchisee.bill', 'total_bill_line', 'Bill Line')
+	discount_amount = fields.Float('Total discount', compute="_compute_total")
+	subtotal = fields.Float('Subtotal', compute="_compute_total")
+
+	@api.multi
+	def _compute_total(self):
+		for record in self:
+			record.discount_amount = record.invoice_id.amount_total * record.invoice_id.franchisee_id.tier_id.percentage/100
+			record.subtotal = record.invoice_id.amount_total-record.discount_amount

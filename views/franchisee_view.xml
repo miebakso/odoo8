@@ -159,8 +159,31 @@
 						<field name="customer" />
 						<field name="franchisee" />
 						<field name="date" />
-						<field name="total_bill" />
-						<field name="total_discount" />
+					</group>
+					<group string="Bill lines">
+						<field name="total_bill_line" nolabel="1">
+							<tree editable="bottom" create="false" delete="false">
+								<field name="sequence" invisible="1" />
+								<field name="product_id" />
+								<field name="name" />
+								<field name="price_unit" />
+								<field name="quantity" />
+								<field name="price_subtotal" />
+							</tree>
+						</field>
+					</group>
+					<group class="oe_subtotal_footer oe_right">
+						<field name="total_bill" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+						<div>
+							<label for="discount_amount"/>
+							<button name="button_reset_taxes" states="draft,proforma2"
+								string="(update)" class="oe_link oe_edit_only"
+								type="object" help="Recompute taxes and total"/>
+						</div>
+						<field name="discount_amount" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+						<field name="subtotal" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+						<!-- <field name="residual" groups="account.group_account_user" widget="monetary" options="{'currency_field': 'currency_id'}"/> -->
+						<!-- <field name="reconciled" invisible="1"/> -->
 					</group>
 				</form>
 			</field>
