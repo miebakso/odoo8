@@ -27,7 +27,7 @@ class res_partner(models.Model):
 	tier_id = fields.Many2one('franchisee.tier', 'Tier', ondelete='restrict')
 	invoice_ids = fields.One2many('account.invoice','franchisee_id','Invoice')
 	customers = fields.One2many('franchisee.bill', 'customer', 'Customer')
-	# franchisees = fields.One2many('franchisee.bill', 'franchisee', 'Franchisee')
+	franchisees = fields.One2many('franchisee.bill', 'franchisee', 'Franchisee')
 
 	@api.onchange('is_franchisee')
 	def _check_is_franchisee(self):
@@ -55,8 +55,8 @@ class account_invoice(models.Model):
 			inv_obj = record.env['franchisee.bill']
 			bill = inv_obj.create({
 				'invoice_id': record.id,
-				'customer': record.id,
-				'franchisee': record.franchisee_id.name,
+				'customer': record.partner_id.id,
+				'franchisee': record.franchisee_id.id,
 				'date': record.date_invoice,
 				'total_bill': record.amount_total,
 				'total_discount': record.amount_total * record.franchisee_id.tier_id.percentage/100
