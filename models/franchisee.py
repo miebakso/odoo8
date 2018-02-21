@@ -25,6 +25,8 @@ class res_partner(models.Model):
 	is_franchisee = fields.Boolean('Is Franchisee')
 	tier_id = fields.Many2one('franchisee.tier', 'Tier', ondelete='restrict')
 	invoice_ids = fields.One2many('account.invoice','franchisee_id','Invoice')
+	# customers = fields.One2many('franchisee.bill', 'customer', 'Customer')
+	# franchisees = fields.One2many('franchisee.bill', 'franchisee', 'Franchisee')
 
 	@api.onchange('is_franchisee')
 	def _check_is_franchisee(self):
@@ -37,6 +39,7 @@ class account_invoice(models.Model):
 	_inherit = 'account.invoice'
 
 	franchisee_id = fields.Many2one('res.partner','Franchisee' ,domain="[('is_franchisee','=','True')]" ,ondelete='cascade')
+	# franchisee_bills = fields.One2many('franchisee.bill', 'invoice_id','Franchisee Bill')
 
 	@api.multi
 	def invoice_validate(self):
@@ -48,7 +51,7 @@ class account_invoice(models.Model):
 			'franchisee': self.franchisee_id.name,
 			'date': self.date_invoice,
 			'total_bill': self.amount_total,
-			'nilai_komisi': self.amount_total * self.franchisee_id.tier_id.percentage/100
+			'total_discount': self.amount_total * self.franchisee_id.tier_id.percentage/100
 			})
 		return bill
 
@@ -64,13 +67,17 @@ class account_invoice(models.Model):
 
 class franchisee_bill(models.Model):
 	_name = 'franchisee.bill'
+	_description = 'Franchisee Bill'
 
 	invoice_id = fields.Char('Invoice ID', required=True)
+	# invoice_id = fields.Many2one('account.invoice', 'Invoice ID', ondelete='cascade')
 	customer = fields.Char('Customer', required=True)
+	# customer = fields.Many2one('res.partner', 'Customer', ondelete='cascade')
 	franchisee = fields.Char('Franchisee', required=True)
+	# franchisee = fields.Many2one('res.partner', 'Franchisee', domain="[('is_franchisee','=','True')]", ondelete='cascade')
 	date = fields.Date('Invoice Date')
-	total_bill = fields.Integer('Total Price')
-	nilai_komisi = fields.Integer('Nilai Komisi')
+	total_bill = fields.Float('Total Price')
+	total_discount = fields.Float('Total Discount')
 	state = fields.Selection([
 		('draft','Draft'),
 		('paid','Paid')],'State',default='draft')

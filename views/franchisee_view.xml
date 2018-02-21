@@ -102,13 +102,13 @@
 			</field>
 		</record>
 
-		<record id="franchisee_action_invoice" model="ir.actions.act_window">
+		<!-- <record id="franchisee_action_invoice" model="ir.actions.act_window">
 			<field name="name">Invoice</field>
 			<field name="res_model">account.invoice</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 		</record>
-		<menuitem id="franchisee_menu_invoice" sequence="2" parent="franchisee_menu_config" action="franchisee_action_invoice" />
+		<menuitem id="franchisee_menu_invoice" sequence="2" parent="franchisee_menu_config" action="franchisee_action_invoice" /> -->
 
 		<!-- Login ============================================================================================================= -->
 
@@ -150,7 +150,7 @@
 			<field name="name">franchisee.bill.form</field>
 			<field name="model">franchisee.bill</field>
 			<field name="arch" type="xml">
-				<form create="false">
+				<form create="false" edit="false">
 					<header>
 						<field name="state" readonly="1" widget="statusbar"/>
 					</header>
@@ -160,7 +160,7 @@
 						<field name="franchisee" />
 						<field name="date" />
 						<field name="total_bill" />
-						<field name="nilai_komisi" />
+						<field name="total_discount" />
 					</group>
 				</form>
 			</field>
@@ -170,18 +170,17 @@
 			<field name="name">franchisee.bill.tree</field>
 			<field name="model">franchisee.bill</field>
 			<field name="arch" type="xml">
-				<tree create="false">
+				<tree create="false" edit="false">
 					<field name="invoice_id" />
 					<field name="customer" />
 					<field name="franchisee" />
 					<field name="date" />
 					<field name="total_bill" />
-					<field name="nilai_komisi" />
+					<field name="total_discount" />
 					<field name="state" />
 				</tree>
 			</field>
 		</record>
-
 
 		<record id="franchisee_invoice_search_view" model="ir.ui.view">
 			<field name="name">franchisee.bill.search</field>
@@ -202,13 +201,13 @@
 			</field>
 		</record>
 		
-		<record id="franchisee_action_bill" model="ir.actions.act_window">
-			<field name="name">Bill</field>
+		<record id="franchisee_action_bills" model="ir.actions.act_window">
+			<field name="name">Bills</field>
 			<field name="res_model">franchisee.bill</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 		</record>
-		<menuitem id="franchisee_menu_bill" sequence="2" parent="franchisee_menu_config" action="franchisee_action_bill" />
+		<menuitem id="franchisee_menu_bill" sequence="2" parent="franchisee_menu_config" action="franchisee_action_bills" />
 
 	</data>
 </openerp>
