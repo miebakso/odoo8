@@ -51,14 +51,7 @@ class account_invoice(models.Model):
 		for record in self:
 			if not record.franchisee_id: continue
 			lines = []
-			for invoice_line in record.invoice_line:
-				lines.append([0,False,{
-					'product_id': invoice_line.product_id.id,
-					'qty': invoice_line.quantity,
-					'unit_price': invoice_line.price_unit,
-					'discount_amount': record.franchisee_id.tier_id.percentage / 100.0 * invoice_line.price_unit * invoice_line.quantity,
-					}])
-
+			
 			bill = bill_obj.create({
 				'invoice_id': record.id,
 				'customer_id': record.partner_id.id,
@@ -66,6 +59,16 @@ class account_invoice(models.Model):
 				'bill_date': record.date_invoice,
 				'bill_lines': lines,
 				})
+
+			for invoice_line in record.invoice_line:
+				lines.append([0,False,{
+					'bill_id': bill.id,
+					'product_id': invoice_line.product_id.id,
+					'qty': invoice_line.quantity,
+					'unit_price': invoice_line.price_unit,
+					'discount_amount': record.franchisee_id.tier_id.percentage / 100.0 * invoice_line.price_unit * invoice_line.quantity,
+					}])
+			bill.write({'bill_lines': lines})
 		return result
 
 	@api.multi
@@ -86,8 +89,8 @@ class franchisee_bill(models.Model):
 	customer_id = fields.Many2one('res.partner', 'Customer', ondelete='cascade')
 	franchisee_id = fields.Many2one('res.partner', 'Franchisee', domain=[('is_franchisee','=','True')], ondelete='cascade')
 	bill_date = fields.Date('Bill Date')
-	bill_lines = fields.One2many('account.invoice.line', 'invoice_id', 'Bill line')
-	total_bill = fields.Float('Total Price', compute="_compute_total")
+	bill_lines = fields.One2many('franchisee.bill.line', 'bill_id','Bill line')
+	total_bill = fields.Float('Total Price')
 	total_discount = fields.Float('Total Discount', compute="_compute_total")
 	state = fields.Selection([
 		('draft','Draft'),
@@ -98,8 +101,8 @@ class franchisee_bill(models.Model):
 	@api.multi
 	def _compute_total(self):
 		for record in self:
-			record.discount_amount = record.total_bill * record.franchisee.tier_id.percentage/100
-			record.subtotal = record.total_bill-record.discount_amount
+			record.total_discount = record.total_bill * record.franchisee_id.tier_id.percentage/100
+			# record.subtotal = record.total_bill-record.discount_amount
 	
 # ==========================================================================================================================
 	
@@ -111,10 +114,16 @@ class franchisee_bill_line(models.Model):
 	bill_id = fields.Many2one('franchisee.bill', 'Bill', ondelete="cascade")
 	product_id = fields.Many2one('product.product', string='Product', required=True, ondelete='restrict', index=True)
 	qty = fields.Float('Qty', required=True)
-	unit_price = fields.Float('Unit Price', required=True)
+	unit_price = fields.Float('Unit Price',required=True)
 	discount_amount = fields.Float('Discount')
-	subtotal = fields.Float('Subtotal', compute='_compute_total')
-
+	subtotal = fields.Float('Subtotal')
+	# subtotal = fields.Float('Subtotal', compute='_compute_total')
+	# @api.multi
+	# def _compute_total(self):
+	# 	for record in self:
+	# 		# record.total_discount = record.total_bill * record.franchisee.tier_id.percentage/100
+	# 		record.subtotal = record.total_bill-record.discount_amount
+	
 # ==========================================================================================================================
 	
 class res_users(models.Model):
