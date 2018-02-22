@@ -168,7 +168,7 @@
 								<field name="unit_price" />
 								<field name="qty" />
 								<field name="discount_amount" />
-								<!-- <field name="price_subtotal" /> -->
+								<field name="subtotal_per_unit" />
 							</tree>
 						</field>
 					</group>
