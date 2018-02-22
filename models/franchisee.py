@@ -58,6 +58,7 @@ class account_invoice(models.Model):
 				'franchisee_id': record.franchisee_id.id,
 				'bill_date': record.date_invoice,
 				'bill_lines': lines,
+			    'total_bill': record.amount_untaxed,
 				})
 
 			for invoice_line in record.invoice_line:
@@ -66,7 +67,8 @@ class account_invoice(models.Model):
 					'product_id': invoice_line.product_id.id,
 					'qty': invoice_line.quantity,
 					'unit_price': invoice_line.price_unit,
-					'discount_amount': record.franchisee_id.tier_id.percentage / 100.0 * invoice_line.price_unit,
+					'discount_amount': record.franchisee_id.tier_id.percentage / 100.0 * invoice_line.price_unit * invoice_line.quantity,
+					# 'discount_amount': record.franchisee_id.tier_id.percentage / 100.0 * invoice_line.price_unit,
 					'subtotal_per_unit': (invoice_line.price_unit*invoice_line.quantity) - (record.franchisee_id.tier_id.percentage / 100.0 *invoice_line.price_unit* invoice_line.quantity)
 					}])
 			bill.write({'bill_lines': lines})
@@ -93,6 +95,7 @@ class franchisee_bill(models.Model):
 	bill_lines = fields.One2many('franchisee.bill.line', 'bill_id','Bill line')
 	total_bill = fields.Float('Total Price')
 	total_discount = fields.Float('Total Discount', compute="_compute_total")
+	total_price_discount = fields.Float('TOTAL BILL', compute="_compute_total")
 	state = fields.Selection([
 		('draft','Draft'),
 		('paid','Paid'),
@@ -103,8 +106,8 @@ class franchisee_bill(models.Model):
 	def _compute_total(self):
 		for record in self:
 			record.total_discount = record.total_bill * record.franchisee_id.tier_id.percentage/100
-			# record.subtotal = record.total_bill-record.discount_amount
-	
+			record.total_price_discount = record.total_bill - (record.total_bill * record.franchisee_id.tier_id.percentage/100)
+
 # ==========================================================================================================================
 	
 class franchisee_bill_line(models.Model):
@@ -116,14 +119,22 @@ class franchisee_bill_line(models.Model):
 	product_id = fields.Many2one('product.product', string='Product', required=True, ondelete='restrict', index=True)
 	qty = fields.Float('Qty', required=True)
 	unit_price = fields.Float('Unit Price',required=True)
-	discount_amount = fields.Float('Discount Per Unit')
+	# discount_amount = fields.Float('Discount Per Unit')
+	discount_amount = fields.Float('Discount Per Unit', compute='_compute_total')
 	subtotal_per_unit = fields.Float('Subtotal')
-	# subtotal = fields.Float('Subtotal', compute='_compute_total')
+	total = fields.Float('Total', compute='_compute_total')
+
 	# @api.multi
 	# def _compute_total(self):
 	# 	for record in self:
-	# 		# record.total_discount = record.total_bill * record.franchisee.tier_id.percentage/100
-	# 		record.subtotal = record.total_bill-record.discount_amount
+	# 		record.discount_amount = record.unit_price * record.bill_id.franchisee_id.tier_id.percentage/100
+	# 		# record.subtotal = record.discount_amount * record.qty
+	@api.multi
+	def _compute_total(self):
+		for record in self:
+			record.discount_amount = record.unit_price * record.bill_id.franchisee_id.tier_id.percentage/100
+			record.total = record.discount_amount * record.qty
+			
 	
 # ==========================================================================================================================
 	
