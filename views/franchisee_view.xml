@@ -200,12 +200,12 @@
 					<group expand="0" string="Group By">
 						<filter string="Month"
 							domain="[]"
-							help="Groupby Month"
-							context="{'group_by':'date'}"/>
+							help ="Group by Month"
+							context="{'group_by':'bill_date'}"/>
 						<filter string="Week"
 							domain="[]"
-							help="Groupby Month"
-							context="{'group_by':'date:week'}"/>
+							help="Group by Week"
+							context="{'group_by':'bill_date:week'}"/>
 					</group>
 				</search>
 			</field>

@@ -49,9 +49,9 @@ class account_invoice(models.Model):
 		result = super(account_invoice, self).invoice_validate()
 		bill_obj = self.env['franchisee.bill']
 		for record in self:
-			if not record.franchisee_id: continue
-			lines = []
 			
+			if not record.franchisee_id: continue
+			lines = []	
 			bill = bill_obj.create({
 				'invoice_id': record.id,
 				'customer_id': record.partner_id.id,
