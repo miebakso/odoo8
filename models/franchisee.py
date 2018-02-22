@@ -68,7 +68,6 @@ class account_invoice(models.Model):
 					'qty': invoice_line.quantity,
 					'unit_price': invoice_line.price_unit,
 					'discount_amount': record.franchisee_id.tier_id.percentage / 100.0 * invoice_line.price_unit * invoice_line.quantity,
-					# 'discount_amount': record.franchisee_id.tier_id.percentage / 100.0 * invoice_line.price_unit,
 					'subtotal_per_unit': (invoice_line.price_unit*invoice_line.quantity) - (record.franchisee_id.tier_id.percentage / 100.0 *invoice_line.price_unit* invoice_line.quantity)
 					}])
 			bill.write({'bill_lines': lines})
@@ -119,16 +118,10 @@ class franchisee_bill_line(models.Model):
 	product_id = fields.Many2one('product.product', string='Product', required=True, ondelete='restrict', index=True)
 	qty = fields.Float('Qty', required=True)
 	unit_price = fields.Float('Unit Price',required=True)
-	# discount_amount = fields.Float('Discount Per Unit')
 	discount_amount = fields.Float('Discount Per Unit', compute='_compute_total')
 	subtotal_per_unit = fields.Float('Subtotal')
 	total = fields.Float('Total', compute='_compute_total')
 
-	# @api.multi
-	# def _compute_total(self):
-	# 	for record in self:
-	# 		record.discount_amount = record.unit_price * record.bill_id.franchisee_id.tier_id.percentage/100
-	# 		# record.subtotal = record.discount_amount * record.qty
 	@api.multi
 	def _compute_total(self):
 		for record in self:
